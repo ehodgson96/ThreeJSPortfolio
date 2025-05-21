@@ -433,25 +433,24 @@
           </div>
         </div>
       </section>
-      
-
-      <section>
+  
+      <section id="camera" class="py-5">
         <h2>Changing Camera Position</h2>
         <p>The camera position is now changing</p>
       </section>
 
-      <section>
+      <section id="bottom" class="py-5">
         <h2>You are at the bottom</h2>
         <p>The cube will now be auto rotating</p>
         <p>Now you can scroll back to the top to reverse the animation</p>
       </section>
     </main>
     <div id="navButtons">
-      <button onclick="scrollToSection(0)"></button>
-      <button onclick="scrollToSection(1)"></button>
-      <button onclick="scrollToSection(2)"></button>
-      <button onclick="scrollToSection(3)"></button>
-      <button onclick="scrollToSection(4)"></button>
+      <button data-section="hero" onclick="scrollToSection(0)"></button>
+      <button data-section="about" onclick="scrollToSection(1)"></button>
+      <button data-section="experience" onclick="scrollToSection(2)"></button>
+      <button data-section="camera" onclick="scrollToSection(3)"></button>
+      <button data-section="bottom" onclick="scrollToSection(4)"></button>
     </div>
     <script type="module" src="/main.ts"></script>
     <script>
@@ -470,6 +469,34 @@
         });
       });
     </script>
+    <script>
+  const sections = document.querySelectorAll('section');
+  const navButtons = document.querySelectorAll('#navButtons button');
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        const sectionId = entry.target.id;
+        const button = document.querySelector(`#navButtons button[data-section="${sectionId}"]`);
+
+        if (entry.isIntersecting) {
+          button.style.backgroundColor = 'cyan'; // Highlight color
+        } else {
+          button.style.backgroundColor = 'rgba(0, 255, 255, 0.171)'; // Default color
+        }
+      });
+    },
+    {
+      threshold: 0.1, // Lower threshold to detect smaller intersections
+      rootMargin: '0px 0px -50% 0px', // Adjust root margin to detect sections earlier
+    }
+  );
+
+  sections.forEach((section) => {
+    section.style.minHeight = '100vh'; // Ensure sections are tall enough to intersect
+    observer.observe(section);
+  });
+</script>
     
   </body>
 </html>
