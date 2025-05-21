@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Elliot Three.js Portfolio</title>
+    <style>
+    body {
+      overflow-x: hidden;
+      margin: 0px;
+      font-family: "Segoe UI", sans-serif;
+      background-color: #0e0e0e;
+      color: white;
+    }
+
+    
+    canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -1;
+      }
+      #scrollProgress {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        text-align: left;
+        z-index: 99;
+        font-size: 3vh;
+      }
+      #navButtons {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 999;
+        pointer-events: auto;
+      }
+
+      #navButtons button {
+        background-color: rgba(0, 255, 255, 0.171);
+        border: none;
+        width: 20px;
+        height: 20px;
+        padding: 0px;
+        font-size: 16px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        border: white solid 1px;
+      }
+
+      #navButtons button:hover {
+        background-color: cyan;
+      }
+    #topbar {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      height: 50px;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: auto;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+      border-radius: 35px;
+      padding: 0 1rem;
+      border: rgba(0, 255, 255, 0.3) solid 1px;
+    }
+
+    .topbar-content {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    .logo .icon {
+      font-size: 1.2rem;
+      color: cyan;
+      filter: drop-shadow(0 0 10px cyan);
+      padding: 10px;
+    }
+
+    .navbar {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .navbar a {
+      text-decoration: none;
+      color: white;
+      font-weight: 500;
+      font-size: 0.9rem;
+      text-transform: lowercase;
+      transition: all 0.3s ease;
+    }
+
+    .navbar a:hover,
+    .navbar a.active {
+      color: cyan;
+    }
+
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      position: relative;
+      z-index: 1;
+      background: linear-gradient( rgba(14, 14, 14, 0), rgba(14, 14, 14, 1, ));
+    }
+
+    .hero-text h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 1rem;
+    }
+
+     .highlight {
+      color: #00ffe0;
+      text-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+    }
+
+    .hero-text p {
+      font-size: 1.25rem;
+      color: #cccccc;
+    }
+
+    #about {
+      background-color: transparent;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 4vh 0;
+    }
+
+    .about-card {
+      background-color: #0a0a0a;
+      border-radius: 32px;
+      padding: 3rem;
+      box-shadow: 0 0 0 2px rgba(0, 255, 255, 0.2);
+      width: 100%;
+    }
+
+    .section-subtitle {
+      color: cyan;
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+    }
+
+    .about-left p {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: #ccc;
+    }
+
+    .skills-card {
+      background-color: white;
+      border-radius: 24px;
+      padding: 2rem;
+      width: 100%;
+      color: #111;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+    }
+
+    .skills-card h3 {
+      margin-bottom: 1.5rem;
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+
+    .skill-category {
+      margin-bottom: 1.5rem;
+    }
+
+    .skill-category label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+      color: #888;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tag {
+      background-color: #e5e5e5;
+      border-radius: 999px;
+      padding: 0.4rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .tag.active {
+      background-color: #c7fff6;
+      color: #000;
+    }
+    section {
+        min-height: 100vh;
+      }
+      .bg-dark-green {
+  background-color: #155c51;
+  border-radius: 15px;
+}
+
+.btn-circle {
+  background-color: rgba(0, 255, 255, 0.2);
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  line-height: 1;
+  transition: all 0.3s ease;
+}
+
+.btn-circle:hover {
+  background-color: #00ffe0;
+  color: #111;
+}
+
+.skill-pill {
+  background-color: #155c51;
+  color: white;
+  padding: 0.5rem 1.25rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+  </style>
+  </head>
+
+  <body style="background-color: #0e0e0e">
+    <header id="topbar">
+      <div class="topbar-content">
+        <div class="logo">
+          <span class="icon">&lt; &gt;</span>
+          <span class="name">Elliot Hodgson</span>
+        </div>
+        <nav class="navbar">
+          <a class="active" href="#hero">home</a>
+          <a href="#about">about</a>
+          <a href="#work">work</a>
+          <a href="#contact">contact</a>
+        </nav>
+      </div>
+    </header>
+    <span id="scrollProgress"></span>
+    <main>
+      <section id="hero">
+        <div class="container text-center">
+          <div class="row justify-content-center">
+            <div class="col-lg-8 hero-text">
+              <h1>
+                Helping to turn ideas into<br />
+                <span class="highlight">seamless digital experiences</span>
+              </h1>
+              <p>
+                Welcome to my portfolio. I am a backend developer<br />
+                working in Manchester, UK.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="about">
+        <div class="container">
+          <div class="about-card">
+            <div class="row g-5">
+              <div class="col-12 col-lg-7 about-left">
+                <h4 class="highlight">ABOUT ME</h4>
+                <h2 class="section-title">My Background</h2>
+                <p>
+                  I'm a backend developer with a passion for building scalable, reliable systems.
+                  With a background in Computer Science for Games and over 5 years of experience
+                  in commercial software development, I’ve worked across industries from fintech
+                  to augmented reality.
+                </p>
+                <p>
+                  Currently, I’m at FluentMoney, where I help modernise mortgage software using
+                  .NET 8 and Azure. I love clean architecture, test-driven development, and
+                  working in collaborative Agile teams.
+                </p>
+              </div>
+              <div class="col-12 col-lg-5">
+                <div class="skills-card">
+                  <h3>My Skills</h3>
+
+                  <div class="skill-category">
+                    <label>Languages</label>
+                    <div class="skill-tags">
+                      <span class="tag active">C#</span>
+                      <span class="tag">TypeScript</span>
+                      <span class="tag">SQL</span>
+                    </div>
+                  </div>
+
+                  <div class="skill-category">
+                    <label>Frameworks</label>
+                    <div class="skill-tags">
+                      <span class="tag">.NET 8</span>
+                      <span class="tag">ASP.NET Core</span>
+                      <span class="tag">Blazor</span>
+                    </div>
+                  </div>
+
+                  <div class="skill-category">
+                    <label>Data Stores</label>
+                    <div class="skill-tags">
+                      <span class="tag">SQL Server</span>
+                      <span class="tag">Cosmos DB</span>
+                    </div>
+                  </div>
+
+                  <div class="skill-category">
+                    <label>Languages</label>
+                    <div class="skill-tags">
+                      <span class="tag">JavaScript</span>
+                      <span class="tag">Python</span>
+                    </div>
+                  </div>
+
+                  <div class="skill-category">
+                    <label>Libraries</label>
+                    <div class="skill-tags">
+                      <span class="tag">AutoMapper</span>
+                      <span class="tag">MediatR</span>
+                    </div>
+                  </div>
+
+                  <div class="skill-category">
+                    <label>Principles & Practices</label>
+                    <div class="skill-tags">
+                      <span class="tag">TDD</span>
+                      <span class="tag">Clean Architecture</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="experience" class="py-5">
+        <div class="container text-center">
+          <h2 class="text-white fw-bold mb-5">
+            <span class="highlight">Professional</span><br />Experience
+          </h2>
+      
+          <div class="d-flex flex-column gap-3">
+            <!-- EXPERIENCE ITEM -->
+            <div class="experience-item p-3 rounded bg-dark-green text-start">
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="text-white">Back-end Developer @ FluentMoney</span>
+                <span class="text-info">2023 – Present</span>
+                <button class="toggle-btn btn btn-circle ms-3">+</button>
+              </div>
+              <div class="experience-details mt-3" hidden>
+                <p>
+                  <a href="https://fluentmoney.com" class="text-info text-decoration-none" target="_blank">
+                    fluentmoney.com
+                  </a>
+                </p>
+                <ul class="text-white small mb-3">
+                  <li>Migrated internal systems to .NET 8</li>
+                  <li>Built robust APIs and integrations with mortgage lenders</li>
+                  <li>Led testing practices with xUnit and CI pipelines</li>
+                </ul>
+                <div class="d-flex flex-wrap gap-2">
+                  <span class="skill-pill">Skillset</span>
+                  <span class="skill-pill">Skillset</span>
+                  <span class="skill-pill">Skillset</span>
+                  <span class="skill-pill">Skillset</span>
+                </div>
+              </div>
+            </div>
+      
+            <!-- DUPLICATE AS NEEDED -->
+            <div class="experience-item p-3 rounded bg-dark-green text-start">
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="text-white">Back-end Developer @ BrightHR</span>
+                <span class="text-info">2022 – 2023</span>
+                <button class="toggle-btn btn btn-circle ms-3">+</button>
+              </div>
+              <div class="experience-details mt-3" hidden>
+                <!-- Hidden content -->
+              </div>
+            </div>
+      
+          </div>
+        </div>
+      </section>
+      
+
+      <section>
+        <h2>Changing Camera Position</h2>
+        <p>The camera position is now changing</p>
+      </section>
+
+      <section>
+        <h2>You are at the bottom</h2>
+        <p>The cube will now be auto rotating</p>
+        <p>Now you can scroll back to the top to reverse the animation</p>
+      </section>
+    </main>
+    <div id="navButtons">
+      <button onclick="scrollToSection(0)"></button>
+      <button onclick="scrollToSection(1)"></button>
+      <button onclick="scrollToSection(2)"></button>
+      <button onclick="scrollToSection(3)"></button>
+      <button onclick="scrollToSection(4)"></button>
+    </div>
+    <script type="module" src="/main.ts"></script>
+    <script>
+      document.querySelectorAll('.toggle-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const details = btn.closest('.experience-item').querySelector('.experience-details');
+          const isHidden = details.hasAttribute('hidden');
+    
+          if (isHidden) {
+            details.removeAttribute('hidden');
+            btn.textContent = '–';
+          } else {
+            details.setAttribute('hidden', '');
+            btn.textContent = '+';
+          }
+        });
+      });
+    </script>
+    
+  </body>
+</html>
